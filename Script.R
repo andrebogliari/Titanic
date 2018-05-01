@@ -1,39 +1,78 @@
 ## CARREGAR PACOTES ####
 
+library(dplyr)
 library(tidyverse)
 library(ggplot2)
 
 ## SELECIONAR BASE DE DADOS ####
 
-data_ttnc <- read.table('titanic.dat.txt')
+dados <- read.table('titanic.dat.txt')
 
-## INSTRUÇÕES BASE DE DADOS ####
+## VARIÁVEIS BASE DE DADOS ####
+
+#Class (V1)    ->   (0=crew, 1=first, 2 = second, 3 = third)
+#Age (V2)      ->   (1 = adult, 0 = child)
+#Sex (V3)      ->   (1 = male, 0 = female)
+#Survived (V4) ->   (1 = yes, 0 = no)
 
 help("Titanic")
 
-Class (0=crew, 1=first, 2 = second, 3 = third)
-Age   (1 = adult, 0 = child)
-Sex   (1 = male, 0 = female)
-Survived (1 = yes, 0 = no)
+help(head)
 
-## SCRIPT - ANÁLISE ####
+## Alterando nome das variáveis ####
 
-# Alterando nome das colunas
+colnames(dados)[colnames(dados)=="V1"] <- "classe"
+colnames(dados)[colnames(dados)=="V2"] <- "idade"
+colnames(dados)[colnames(dados)=="V3"] <- "sexo"
+colnames(dados)[colnames(dados)=="V4"] <- "sobrev"
 
-colnames(data_ttnc)[colnames(data_ttnc)=="V1"] <- "classe"
-colnames(data_ttnc)[colnames(data_ttnc)=="V2"] <- "idade"
-colnames(data_ttnc)[colnames(data_ttnc)=="V3"] <- "sexo"
-colnames(data_ttnc)[colnames(data_ttnc)=="V4"] <- "sobreviveu"
+## Filtrando dados (filter, select, arrange, mutate, group_by and summarise) ####
 
-## Filtrando dados
+#Analisar quantas homens e mulheres que sobreviveram/morreram
+dados  %>% 
+  group_by(sexo) %>% 
+  count(sobrev)
 
-filter(data_ttnc, sobreviveu == 1, sexo == 1)
-filter(data_ttnc, sobreviveu == 1, sexo == 0)
+#Analisar quantas homens e mulheres que sobreviveram/morreram, excluindo as crianças.
+dados  %>% 
+  filter(idade == 1) %>%
+  group_by(sexo) %>% 
+  count(sobrev)
 
-# Plotando Gráficos
+#Analisar quantas homens e mulheres que sobreviveram/morreram, excluindo os adultos.
+dados  %>% 
+  filter(idade == 0) %>%
+  group_by(sexo) %>% 
+  count(sobrev)
 
-d <- ggplot(data_ttnc, aes(sobreviveu, sexo))
-d + geom_count()
+#Taxa de homens e mulheres que sobreviveram.
+dados  %>% 
+  group_by(sexo) %>%
+  summarise_each(funs(mean), sobrev)
+
+#Taxa de homens e mulheres que sobreviveram, excluindo as crianças.
+dados  %>% 
+  group_by(sexo) %>%
+  filter(idade == 1) %>% 
+  summarise_each(funs(mean), sobrev)
+
+#Taxa de homens e mulheres que sobreviveram, excluindo os adultos.
+dados  %>% 
+  group_by(sexo) %>%
+  filter(idade == 0) %>% 
+  summarise_each(funs(mean), sobrev)
+  
+
+#Analisar quantas pessoas sobreviveram/morreram de acordo com sua classe
+dados  %>% 
+  group_by(classe) %>% 
+  count(sobrev)
+
+#Taxa de pessoas que sobreviveram de acordo com a classe.
+dados  %>% 
+  group_by(classe) %>%
+  summarise_each(funs(mean), sobrev)
+
 
 
 
