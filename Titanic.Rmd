@@ -88,4 +88,14 @@ dados  %>%
   summarise_each(funs(mean), sobrev)
 ```
 
+```{r}
+#Gráfico
+
+df <- dados  %>% 
+  group_by(classe) %>%
+  summarise_each(funs(mean), sobrev)
+
+g <- ggplot(data=df)+
+     geom_mosaic
+```
 
