@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Análise
 
-```{r cars}
+```{r message=FALSE, warning=FALSE}
 ## CARREGAR PACOTES ####
 
 library(dplyr)
@@ -29,9 +29,9 @@ dados <- read.table('titanic.dat.txt')
 #Sex (V3)      ->   (1 = male, 0 = female)
 #Survived (V4) ->   (1 = yes, 0 = no)
 
-help("Titanic")
+#help("Titanic")
 
-help(head)
+#help(head)
 
 ## Alterando nome das variáveis ####
 
@@ -91,11 +91,8 @@ dados  %>%
 ```{r}
 #Gráfico
 
-df <- dados  %>% 
-  group_by(classe) %>%
-  summarise_each(funs(mean), sobrev)
+#df <- dados  %>% group_by(classe) %>% summarise_each(funs(mean), sobrev)
 
-g <- ggplot(data=df)+
-     geom_mosaic
+#g <- ggplot(data=df) + geom_mosaic
 ```
 
